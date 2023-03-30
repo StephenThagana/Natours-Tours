@@ -31,16 +31,28 @@ const usersSchema = new mongoose.Schema({
   passwordConfirm: {
     type: String,
     required: [true, 'please confirm your password'],
-    valdate: {
+    validate: {
       validator: function (el) {
         return el === this.password;
       },
       message: 'Passwords are not the same!!',
     },
-    passwordChangedAt: Date,
-    passwordResetToken: String,
-    passwordResetExpires: Date,
   },
+  passwordChangedAt: Date,
+  passwordResetToken: String,
+  passwordResetExpires: Date,
+  active: {
+    type: Boolean,
+    default: true,
+    select: false,
+  },
+});
+
+usersSchema.pre('save', function (next) {
+  if (!this.isModified('password') || this.isNew) return next();
+
+  this.passwordChangedAt = Date.now() - 1000;
+  next();
 });
 
 usersSchema.pre('save', async function (next) {
@@ -52,6 +64,10 @@ usersSchema.pre('save', async function (next) {
   next();
 });
 
+usersSchema.pre(/^find/, function (next) {
+  this.find({ acive: { $ne: false } });
+  next();
+});
 usersSchema.methods.correctPassword = async function (
   candidatePassword,
   userPassword

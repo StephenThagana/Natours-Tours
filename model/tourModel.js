@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const slugify = require('slugify');
 const validator = require('validator');
+// const User = require('./userModel');
 
 const toursSchema = new mongoose.Schema(
   {
@@ -25,6 +26,11 @@ const toursSchema = new mongoose.Schema(
     difficulty: {
       type: String,
       required: [true, ' A tour must have difficulty'],
+
+      enum: {
+        values: ['easy', 'medium', 'difficult'],
+        message: 'A tour must must be either: easy,medium or difficult',
+      },
     },
 
     ratingsAverage: {
@@ -72,15 +78,47 @@ const toursSchema = new mongoose.Schema(
     //   type: boolean,
     //   default: false,
     // },
+    startLocation: {
+      type: {
+        type: String,
+        default: 'Point',
+        enum: ['Point'],
+      },
+      coordinates: [Number],
+      address: String,
+      description: String,
+    },
+    locations: [
+      {
+        type: {
+          type: String,
+          default: 'Point',
+          enum: 'Point',
+        },
+        coordinates: [Number],
+        address: String,
+        description: String,
+        day: Number,
+      },
+    ],
+    guides: [{ type: mongoose.Schema.ObjectId, ref: 'User' }],
   },
   {
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
   }
 );
+toursSchema.index({ price: 1, ratingsAverage: -1 });
+toursSchema.index({ slug: 1 });
 
 toursSchema.virtual('durationWeeks').get(function () {
   return this.duration / 7;
+});
+
+toursSchema.virtual('reviews', {
+  ref: 'Review',
+  foreignField: 'tour',
+  localField: '_id',
 });
 
 // Document middleware,it runs before save() command and create() bt not insertMany()
@@ -88,11 +126,11 @@ toursSchema.pre('save', function (next) {
   this.slug = slugify(this.name, { lower: true });
   next();
 });
-
-toursSchema.post('save', function (doc, next) {
-  console.log(doc);
-  next();
-});
+// toursSchema.pre('save', async function (next) {
+//   const guidesPromises = this.guides.map(async (id) => await User.findById(id));
+//   this.guides = await Promises.all(guidesPromises);
+//   next();
+// });
 
 // QUERY MIDDLEWARE
 toursSchema.pre(/^find/, function (next) {
@@ -100,6 +138,19 @@ toursSchema.pre(/^find/, function (next) {
   next();
 });
 
+toursSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: 'guides',
+    select: '-__v -passwordChangedAt',
+  });
+
+  next();
+});
+
+toursSchema.post('save', function (doc, next) {
+  // console.log(doc);
+  next();
+});
 toursSchema.post(/^find/, function (docs, next) {
   next();
 });
