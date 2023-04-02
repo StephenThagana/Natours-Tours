@@ -73,6 +73,11 @@ reviewsSchema.statics.calcAverageRatings = async function (tourId) {
 reviewsSchema.post('save', function () {
   this.constructor.calcAverageRatings(this.tour);
 });
+
+reviewsSchema.pre(/findOneAnd/, async function (next) {
+  const r = await this.findOne();
+  console.log(r);
+});
 const Review = mongoose.model('Review', reviewsSchema);
 
 module.exports = Review;
