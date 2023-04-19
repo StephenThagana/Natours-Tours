@@ -33,6 +33,7 @@ const reviewsSchema = new mongoose.Schema(
   }
 );
 
+reviewsSchema.index({ tour: 1, user: 1 }, { unique: true });
 reviewsSchema.pre(/^find/, function (next) {
   // this.populate({
   //   path: 'tour',
@@ -63,11 +64,17 @@ reviewsSchema.statics.calcAverageRatings = async function (tourId) {
       },
     },
   ]);
-
-  await Tour.findByIdAndUpdate(tourId, {
-    ratingsQuantity: stats[0].nRating,
-    ratingsAverage: stats[0].avgRating,
-  });
+  if (stats.length > 0) {
+    await Tour.findByIdAndUpdate(tourId, {
+      ratingsQuantity: stats[0].nRating,
+      ratingsAverage: stats[0].avgRating,
+    });
+  } else {
+    await Tour.findByIdAndUpdate(tourId, {
+      ratingsQuantity: 0,
+      ratingsAverage: 4.5,
+    });
+  }
 };
 
 reviewsSchema.post('save', function () {
