@@ -4,6 +4,7 @@
   "description": "learning node",
   "main": "app.js",
   "scripts": {
+    "start": "node server.js",
     "start:dev": "nodemon server.js",
     "start:prod": "SET NODE_ENV=production& nodemon server.js",
     "debug": "ndb server.js",
@@ -42,5 +43,8 @@
     "ndb": "^1.1.5",
     "node-sass": "^8.0.0",
     "parcel-bundler": "^1.12.5"
+  },
+  "engines": {
+    "node": ">=10.0.0"
   }
 }
