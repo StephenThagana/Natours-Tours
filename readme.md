@@ -15,4 +15,4 @@ Built using the modern technologies: node.js,express, mongoDB and mongoose
 
 ## Can i see the live site?
 
-A:sure! Here you go ---> <a href="https://natoursTravel.netlify.app/">Responsive Easy Bank landing page</a>
+A:sure! Here you go ---> <a href="https://natoursTravel.netlify.app/"> Fullstack Natours application</a>
