@@ -2,7 +2,7 @@
 
 Built using the modern technologies: node.js,express, mongoDB and mongoose
 
-![Design preview for the Natours application](./design/desktop-preview.jpg)
+![Design preview for the Natours application](./dev-data/img/natours-design-preview.png)
 
 ## Welcome! 👋👋
 
@@ -15,4 +15,4 @@ Built using the modern technologies: node.js,express, mongoDB and mongoose
 
 ## Can i see the live site?
 
-A:sure! Here you go ---> <a href="https://natoursTravel.netlify.app/"> Fullstack Natours application</a>
+A:sure! Here you go ---> <a href="https://heritagetours.onrender.com"> Fullstack Natours application</a>
