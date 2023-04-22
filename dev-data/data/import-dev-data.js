@@ -6,7 +6,10 @@ const User = require('./../../model/userModel');
 const Review = require('./../../model/reviewModel');
 
 dotEnv.config({ path: './config.env' });
-const DB = process.env.DATABASE_LOCAL;
+const DB = process.env.DATABASE.replace(
+  '<PASSWORD>',
+  process.env.DATABASE_PASSWORD
+);
 
 mongoose
   .connect(DB, {
