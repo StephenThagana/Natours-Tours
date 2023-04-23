@@ -11,7 +11,7 @@ const signToken = (id) => {
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
 };
-const createSendToken = (user, statusCode, res) => {
+const createSendToken = (user, statusCode, req, res) => {
   const token = signToken(user._id);
   const cookieOptions = {
     expires: new Date(
@@ -58,7 +58,7 @@ exports.login = catchAsync(async (req, res, next) => {
   if (!user || !(await user.correctPassword(password, user.password))) {
     return next(new appError('Incorrect email or password', 401));
   }
-  createSendToken(user, 200, res);
+  createSendToken(user, 200, req, res);
 });
 
 exports.logout = (req, res) => {
@@ -198,7 +198,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   user.passwordExpiresToken = undefined;
   await user.save();
 
-  createSendToken(user, 200, res);
+  createSendToken(user, 200, req, res);
 });
 
 exports.updatePassword = catchAsync(async (req, res, next) => {
@@ -210,5 +210,5 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
   user.passwordConfirm = req.body.passwordConfirm;
 
   await user.save();
-  createSendToken(user, 200, res);
+  createSendToken(user, 200, req, res);
 });
