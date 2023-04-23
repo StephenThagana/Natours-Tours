@@ -10,6 +10,7 @@ Built using the modern technologies: node.js,express, mongoDB and mongoose
 
 - Book Tours of interest on the application
 - login and view appropriate pages depending on roles.
+  To login, try eliana@example.com as email and password test1234
 - Review booked Tours if not an admin or lead-guide
 - See hover states for all interactive elements on the page
 
